@@ -1,0 +1,18 @@
+#cloud-config
+hostname: servidor
+users:
+  - name: admin
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAr... # tu clave pública aquí
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: wheel
+    shell: /bin/sh
+packages:
+  - vim
+  - git
+  - curl
+runcmd:
+  - [ systemctl, start, sshd ]
+  - [ systemctl, enable, sshd ]
+  - [ apt-get, update ]
+  - [ apt-get, upgrade, -y ]
