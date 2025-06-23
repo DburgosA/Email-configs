@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.4
@@ -10,12 +8,11 @@ services:
       MYSQL_DATABASE: wp_db
       MYSQL_USER: wp_user
       MYSQL_PASSWORD: wp_pass
-      # Joomla
       MYSQL_DATABASE_2: joomla_db
       MYSQL_USER_2: joomla_user
       MYSQL_PASSWORD_2: joomla_pass
     networks:
-      - cms-net
+      - red_db
     volumes:
       - db_data:/var/lib/mysql
       - ./db/init-joomla.sql:/docker-entrypoint-initdb.d/init-joomla.sql:ro
@@ -32,7 +29,8 @@ services:
     depends_on:
       - db
     networks:
-      - cms-net
+      - red_servicio
+      - red_db
     volumes:
       - cms1_data:/var/www/html
 
@@ -48,7 +46,8 @@ services:
     depends_on:
       - db
     networks:
-      - cms-net
+      - red_servicio
+      - red_db
     volumes:
       - cms2_data:/var/www/html
 
@@ -64,11 +63,13 @@ services:
       - cms1
       - cms2
     networks:
-      - cms-net
+      - red_expuesta
+      - red_servicio
 
 networks:
-  cms-net:
-    driver: bridge
+  red_expuesta:
+  red_servicio:
+  red_db:
 
 volumes:
   db_data:

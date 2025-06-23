@@ -112,53 +112,63 @@ b) Abre tu navegador y accede a:
 http://www.sitio1.test (debería mostrar WordPress)
 http://www.sitio2.test (debería mostrar Joomla)
 
-daniel@daniel-VirtualBox:~/containers$ docker compose down
-docker compose up -d
-WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
-[+] Running 5/5
- ✔ Container proxy-nginx       Removed                                                                                                5.2s 
- ✔ Container cms1-wordpress    Removed                                                                                                6.2s 
- ✔ Container cms2-joomla       Removed                                                                                                6.1s 
- ✔ Container cms-db            Removed                                                                                                7.3s 
- ✔ Network containers_cms-net  Removed                                                                                                1.5s 
-WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
-[+] Running 5/5
- ✔ Network containers_cms-net  Created                                                                                                1.7s 
- ✔ Container cms-db            Started                                                                                                6.1s 
- ✔ Container cms2-joomla       Started                                                                                                9.9s 
- ✔ Container cms1-wordpress    Started                                                                                               10.2s 
- ✔ Container proxy-nginx       Started                                                                                               15.8s 
-daniel@daniel-VirtualBox:~/containers$ docker compose exec proxy-nginx ping -c 2 cms1-wordpress
-docker compose exec proxy-nginx ping -c 2 cms2-joomla
-docker compose exec proxy-nginx ping -c 2 cms-db
-WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
-service "proxy-nginx" is not running
-WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
-service "proxy-nginx" is not running
-WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
-service "proxy-nginx" is not running
+docker compose exec cms1-wordpress ping cms2-joomla
+docker compose exec cms1-wordpress ping cms-db
+docker compose exec proxy ping cms1-wordpress
+docker compose exec proxy ping cms2-joomla
 
+# Mapa de Redes y Componentes del Servicio
 
-daniel@daniel-VirtualBox:~/containers$ docker compose  logs proxy
-WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
-proxy-nginx  | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
-proxy-nginx  | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
-proxy-nginx  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
-proxy-nginx  | 10-listen-on-ipv6-by-default.sh: info: can not modify /etc/nginx/conf.d/default.conf (read-only file system?)
-proxy-nginx  | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
-proxy-nginx  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
-proxy-nginx  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
-proxy-nginx  | /docker-entrypoint.sh: Configuration complete; ready for start up
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: using the "epoll" event method
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: nginx/1.27.5
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: OS: Linux 6.11.0-26-generic
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker processes
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 21
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 22
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 23
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 24
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 25
-proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 26
+```
+                         ┌──────────────────────┐
+                         │     RED EXPUESTA     │
+                         └──────────────────────┘
+                                  │
+                                  ▼
+                             ┌────────┐
+                             │ Proxy │
+                             └────────┘
+                                  │
+                                  ▼
+                 ┌────────────────────────────────────┐
+                 │     RED ACCESO AL SERVICIO         │
+                 └────────────────────────────────────┘
+                    │             │              │
+                    ▼             ▼              ▼
+                ┌──────┐       ┌──────┐       ┌──────┐
+                │ CMS1 │       │ CMS2 │       │ CMS3 │
+                └──────┘       └──────┘       └──────┘
+                    ╲            │           ╱
+                     ╲           │          ╱
+                      ╲          ▼         ╱
+                 ┌────────────────────────────┐
+                 │   RED EXCLUSIVA ACCESO     │
+                 └────────────────────────────┘
+                                  │
+                                  ▼
+                              ┌──────┐
+                              │  DB  │
+                              └──────┘
+```
+
+## Redes Docker recomendadas
+- **red_expuesta**: Solo el proxy está conectado aquí y expone el puerto 80/443.
+- **red_servicio**: Proxy y CMS (CMS1, CMS2, CMS3) están conectados aquí.
+- **red_db**: Solo los CMS y la base de datos están conectados aquí. El proxy NO tiene acceso a esta red.
+
+## Ejemplo de definición en docker-compose.yml
+
+```yaml
+networks:
+  red_expuesta:
+  red_servicio:
+  red_db:
+```
+
+Luego, en cada servicio:
+- **proxy**: `networks: [red_expuesta, red_servicio]`
+- **cms1, cms2, cms3**: `networks: [red_servicio, red_db]`
+- **db**: `networks: [red_db]`
+
+Así se logra el aislamiento y la comunicación según el diagrama.
 
