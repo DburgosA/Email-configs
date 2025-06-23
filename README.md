@@ -93,12 +93,20 @@ docker compose up -d
 a) Accede al contenedor de Nginx (proxy):
 Deberías ver respuestas exitosas de cada contenedor.
 
+docker compose exec proxy-nginx ping -c 2 cms1-wordpress
+docker compose exec proxy-nginx ping -c 2 cms2-joomla
+docker compose exec proxy-nginx ping -c 2 cms-db
+
 b) Probar acceso HTTP desde el proxy a los CMS:
 Deberías recibir encabezados HTTP 200 OK o 302 Found.
 
 ##  Verificar conectividad externa (desde el host)
 a) Edita tu archivo hosts (en Windows: hosts):
 Agrega estas líneas:
+
+docker compose exec proxy-nginx apt update && apt install -y curl
+docker compose exec proxy-nginx curl -I http://cms1-wordpress
+docker compose exec proxy-nginx curl -I http://cms2-joomla
 
 b) Abre tu navegador y accede a:
 http://www.sitio1.test (debería mostrar WordPress)
