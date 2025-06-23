@@ -138,3 +138,27 @@ service "proxy-nginx" is not running
 WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
 service "proxy-nginx" is not running
 
+
+daniel@daniel-VirtualBox:~/containers$ docker compose  logs proxy
+WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+proxy-nginx  | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+proxy-nginx  | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+proxy-nginx  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+proxy-nginx  | 10-listen-on-ipv6-by-default.sh: info: can not modify /etc/nginx/conf.d/default.conf (read-only file system?)
+proxy-nginx  | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+proxy-nginx  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+proxy-nginx  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+proxy-nginx  | /docker-entrypoint.sh: Configuration complete; ready for start up
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: using the "epoll" event method
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: nginx/1.27.5
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: OS: Linux 6.11.0-26-generic
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker processes
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 21
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 22
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 23
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 24
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 25
+proxy-nginx  | 2025/06/23 21:50:18 [notice] 1#1: start worker process 26
+
