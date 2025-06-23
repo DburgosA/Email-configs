@@ -13,6 +13,7 @@ services:
       MYSQL_PASSWORD_2: joomla_pass
     networks:
       - red_db
+      - red_servicio
     volumes:
       - db_data:/var/lib/mysql
       - ./db/init-joomla.sql:/docker-entrypoint-initdb.d/init-joomla.sql:ro
