@@ -173,3 +173,10 @@ Luego, en cada servicio:
 
 Así se logra el aislamiento y la comunicación según el diagrama.
 
+Error
+
+MySQL ha dicho: Documentación
+No se estableció la conexión: los parámetros están incorrectos.
+mysqli::real_connect(): php_network_getaddresses: getaddrinfo for cms-db failed: Temporary failure in name resolution
+mysqli::real_connect(): (HY000/2002): php_network_getaddresses: getaddrinfo for cms-db failed: Temporary failure in name resolution
+phpMyAdmin intentó conectarse con el servidor MySQL, y el servidor rechazó esta conexión. Deberá revisar el host, nombre de usuario y contraseña en config.inc.php y asegurarse que corresponden con la información provista por el administrador del servidor MySQL.
