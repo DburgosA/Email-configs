@@ -16,6 +16,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./db/init-joomla.sql:/docker-entrypoint-initdb.d/init-joomla.sql:ro
+      - ./db/init-wordpress.sql:/docker-entrypoint-initdb.d/init-wordpress.sql:ro
 
   cms1:
     image: wordpress:6.5
@@ -64,6 +65,19 @@ services:
       - cms2
     networks:
       - red_expuesta
+      - red_servicio
+
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: cms-db
+      PMA_USER: root
+      PMA_PASSWORD: rootpass
+    ports:
+      - "8080:80"
+    networks:
       - red_servicio
 
 networks:

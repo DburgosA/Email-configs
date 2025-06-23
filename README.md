@@ -6,6 +6,7 @@
 - **db**: MySQL (usuario y base de datos independientes para cada CMS)
 - **cms2**: Joomla (PHP, acceso a base de datos)
 - **proxy**: Nginx (proxy inverso con virtual hosts para www.sitio1.test y www.sitio2.test)
+- **phpMyAdmin**: Interfaz web para administrar la base de datos MySQL. Acceso en http://localhost:8080 (usuario: root, contraseña: rootpass)
 
 ## Red Docker
 Se utiliza una red bridge personalizada llamada `cms-net` para la comunicación interna.
