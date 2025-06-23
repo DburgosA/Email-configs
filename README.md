@@ -175,8 +175,34 @@ Así se logra el aislamiento y la comunicación según el diagrama.
 
 Error
 
-MySQL ha dicho: Documentación
-No se estableció la conexión: los parámetros están incorrectos.
-mysqli::real_connect(): php_network_getaddresses: getaddrinfo for cms-db failed: Temporary failure in name resolution
-mysqli::real_connect(): (HY000/2002): php_network_getaddresses: getaddrinfo for cms-db failed: Temporary failure in name resolution
-phpMyAdmin intentó conectarse con el servidor MySQL, y el servidor rechazó esta conexión. Deberá revisar el host, nombre de usuario y contraseña en config.inc.php y asegurarse que corresponden con la información provista por el administrador del servidor MySQL.
+daniel@daniel-VirtualBox:~/containers$ docker compose exec proxy-nginx apt-get update 
+service "proxy-nginx" is not running
+daniel@daniel-VirtualBox:~/containers$ docker compose exec proxy apt-get update Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [756 B]
+Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [268 kB]
+Fetched 9316 kB in 5s (1753 kB/s)                         
+Reading package lists... Done
+daniel@daniel-VirtualBox:~/containers$ docker compose exec cms1-wordpress apt-get update
+service "cms1-wordpress" is not running
+daniel@daniel-VirtualBox:~/containers$ docker compose exec cms1 apt-get update
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8793 kB]
+Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [756 B]
+Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [268 kB]
+Fetched 9316 kB in 5s (1961 kB/s)                         
+Reading package lists... Done
+
+daniel@daniel-VirtualBox:~/containers$ docker ps
+CONTAINER ID   IMAGE            COMMAND                  CREATED          STATUS          PORTS                                     NAMES
+78470b792884   nginx:1.27       "/docker-entrypoint.…"   27 minutes ago   Up 27 minutes   0.0.0.0:80->80/tcp, [::]:80->80/tcp       proxy-nginx
+024e77dc19bf   wordpress:6.5    "docker-entrypoint.s…"   27 minutes ago   Up 27 minutes   80/tcp                                    cms1-wordpress
+ffaa4714253e   joomla:4.4       "/entrypoint.sh apac…"   27 minutes ago   Up 27 minutes   80/tcp                                    cms2-joomla
+1678e522bb6d   phpmyadmin:5.2   "/docker-entrypoint.…"   27 minutes ago   Up 27 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   phpmyadmin
+0c628ed068b2   mysql:8.4        "docker-entrypoint.s…"   27 minutes ago   Up 27 minutes   3306/tcp, 33060/tcp                       cms-db
+daniel@daniel-VirtualBox:~/containers$ 
+
