@@ -1,28 +1,3 @@
-# Comandos para crear y levantar los contenedores del proyecto CMS
-
-# 0. Actualiza el sistema e instala dependencias básicas
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y apt-transport-https ca-certificates curl software-properties-common git
-
-# 0.1 Instala Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-
-# 0.2 Instala Docker Compose (plugin oficial)
-sudo apt install -y docker-compose-plugin
-
-# 0.3 Agrega tu usuario al grupo docker (opcional, para no usar sudo)
-sudo usermod -aG docker $USER
-# Cierra sesión y vuelve a entrar para aplicar el grupo
-
-# 0.4 Verifica la instalación de Docker y Compose
-docker --version
-docker compose version
-
-# 0.5 (Opcional) Clona el repositorio del proyecto
-git clone https://github.com/DburgosA/Email-configs.git
-cd Email-configs
-
 # 1. Clona el repositorio o copia los archivos del proyecto
 
 # 2. Crea la red personalizada (opcional, Docker Compose la crea automáticamente)
@@ -31,6 +6,11 @@ cd Email-configs
 # 3. Levanta todos los contenedores definidos en docker-compose.yml
 
 docker compose up -d
+
+daniel@daniel-VirtualBox:~/containers$ docker compose up -d
+WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+unable to get image 'mysql:8.4': permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.49/images/mysql:8.4/json": dial unix /var/run/docker.sock: connect: permission denied
+
 
 # 4. Verifica que los contenedores estén corriendo
 
