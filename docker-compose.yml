@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.4
+    container_name: cms-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: wp_db
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: wp_pass
+      # Joomla
+      MYSQL_DATABASE_2: joomla_db
+      MYSQL_USER_2: joomla_user
+      MYSQL_PASSWORD_2: joomla_pass
+    networks:
+      - cms-net
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init-joomla.sql:/docker-entrypoint-initdb.d/init-joomla.sql:ro
+
+  cms1:
+    image: wordpress:6.5
+    container_name: cms1-wordpress
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: wp_pass
+      WORDPRESS_DB_NAME: wp_db
+    depends_on:
+      - db
+    networks:
+      - cms-net
+    volumes:
+      - cms1_data:/var/www/html
+
+  cms2:
+    image: joomla:4.4
+    container_name: cms2-joomla
+    restart: always
+    environment:
+      JOOMLA_DB_HOST: db:3306
+      JOOMLA_DB_USER: joomla_user
+      JOOMLA_DB_PASSWORD: joomla_pass
+      JOOMLA_DB_NAME: joomla_db
+    depends_on:
+      - db
+    networks:
+      - cms-net
+    volumes:
+      - cms2_data:/var/www/html
+
+networks:
+  cms-net:
+    driver: bridge
+
+volumes:
+  db_data:
+  cms1_data:
+  cms2_data:

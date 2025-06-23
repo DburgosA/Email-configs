@@ -1,20 +1,71 @@
-Objetivo
+# Proyecto: Infraestructura CMS con Docker
 
-El objetivo de éste taller es comprender la lógica de configuración y funcionamiento de los servicios de correo electrónico con todos los protocolos presentes entre relaciones cliente servidor y el intercambio de mensajes entre servidores de correos. Objetivo transversal presente en todo el curso es la implementación, configuración y operación de servicios a nivel cliente servidor sobre plataformas operativas Unix.
+## Estructura de Contenedores
 
-Actividad
+- **cms1**: WordPress (PHP, acceso a base de datos)
+- **db**: MySQL (usuario y base de datos independientes para cada CMS)
+- **cms2**: Joomla (PHP, acceso a base de datos)
+- **proxy**: (Por crear)
 
-Para probar los servicios de correo a nivel cliente servidor será necesaria la virtualización de dos máquinas virtuales: Servidor DNS/Correo SMTP y Cliente de correo POP3 e IMAP. Para mejorar la capacidades de operación en sistemas multiplataforma se sugiere para esta labor usar un servidor FreeBSD como servidor y un GNU/Linux como cliente.
+## Red Docker
+Se utiliza una red bridge personalizada llamada `cms-net` para la comunicación interna.
 
-La virtualización debe contener:
+## Contenedor CMS1: WordPress
 
-Correcta configuración del entorno de virtualización.
-Implementación de dos maquina virtuales con un sistema operativo del tipo Unix.
-Correcta implementación y configuración de la zona de dominio DNS y correo SMTP .
-Correcta implementación y configuración del cliente DNS y correo POP3.
-Pruebas de funcionamiento del servicio de correo con protocolo SMTP y cliente POP/IMAP (Thunderbird u otro).
-Realizar la implementación de un Webmail como cliente SMTP e IMAP.
+- Imagen: `wordpress:6.5`
+- Volumen persistente para datos.
+- Conectado a la base de datos `db`.
 
-EVALUACIÓN
+### Variables de entorno usadas:
+- `WORDPRESS_DB_HOST=db:3306`
+- `WORDPRESS_DB_USER=wp_user`
+- `WORDPRESS_DB_PASSWORD=wp_pass`
+- `WORDPRESS_DB_NAME=wp_db`
 
-La entrega de la evaluación será mediante un informe de actividad del procesos de instalación, configuración y pruebas realizado sobre el ambiente de virtualización. Se sugiere por tanto utilizar elementos adhoc que identifiquen la propiedad de la tarea (ejemplo: nombre de la máquina y nombre de usuario), en conjunto con las capturas de pantalla de los hitos más importantes del proceso.
+## Contenedor DB: MySQL
+
+- Imagen: `mysql:8.4`
+- Volumen persistente para datos.
+- Usuario: `wp_user`, Password: `wp_pass`, Base: `wp_db`
+- Root Password: `rootpass`
+
+## Contenedor CMS2: Joomla
+
+- Imagen: `joomla:4.4`
+- Volumen persistente para datos.
+- Conectado a la base de datos `db` (usuario y base independientes).
+
+### Variables de entorno usadas:
+- `JOOMLA_DB_HOST=db:3306`
+- `JOOMLA_DB_USER=joomla_user`
+- `JOOMLA_DB_PASSWORD=joomla_pass`
+- `JOOMLA_DB_NAME=joomla_db`
+
+## Cómo iniciar los contenedores
+
+```sh
+docker compose up -d
+```
+
+## Próximos pasos
+- Crear proxy inverso (Nginx/HAProxy)
+- Configurar virtual hosts y resolución de nombres
+
+---
+
+**Credenciales de prueba:**
+- MariaDB root: `rootpass`
+- MariaDB usuario WordPress: `wp_user` / `wp_pass`
+- Base de datos WordPress: `wp_db`
+
+**Credenciales de prueba Joomla:**
+- MariaDB usuario Joomla: `joomla_user` / `joomla_pass`
+- Base de datos Joomla: `joomla_db`
+
+**Red:** `cms-net` (bridge)
+
+**Versiones:**
+- WordPress: 6.5
+- Joomla: 4.4
+- MySQL: 8.4
+- Docker Compose: 3.8

@@ -1,0 +1,49 @@
+# Comandos para crear y levantar los contenedores del proyecto CMS
+
+# 0. Actualiza el sistema e instala dependencias básicas
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common git
+
+# 0.1 Instala Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# 0.2 Instala Docker Compose (plugin oficial)
+sudo apt install -y docker-compose-plugin
+
+# 0.3 Agrega tu usuario al grupo docker (opcional, para no usar sudo)
+sudo usermod -aG docker $USER
+# Cierra sesión y vuelve a entrar para aplicar el grupo
+
+# 0.4 Verifica la instalación de Docker y Compose
+docker --version
+docker compose version
+
+# 0.5 (Opcional) Clona el repositorio del proyecto
+git clone https://github.com/DburgosA/Email-configs.git
+cd Email-configs
+
+# 1. Clona el repositorio o copia los archivos del proyecto
+
+# 2. Crea la red personalizada (opcional, Docker Compose la crea automáticamente)
+# docker network create cms-net
+
+# 3. Levanta todos los contenedores definidos en docker-compose.yml
+
+docker compose up -d
+
+# 4. Verifica que los contenedores estén corriendo
+
+docker ps
+
+# 5. Nombres de los contenedores:
+# - cms-db         (MySQL)
+# - cms1-wordpress (WordPress)
+# - cms2-joomla    (Joomla)
+# - proxy-nginx    (Nginx, se creará en el siguiente paso)
+
+# 6. Para ver los logs de un contenedor específico:
+# docker logs <nombre_contenedor>
+
+# 7. Para detener y eliminar los contenedores:
+docker compose down
