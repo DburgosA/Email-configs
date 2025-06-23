@@ -88,3 +88,18 @@ docker compose up -d
 - Joomla: 4.4
 - MySQL: 8.4
 - Docker Compose: 3.8
+
+## Verificar conectividad interna (entre contenedores)
+a) Accede al contenedor de Nginx (proxy):
+Deberías ver respuestas exitosas de cada contenedor.
+
+b) Probar acceso HTTP desde el proxy a los CMS:
+Deberías recibir encabezados HTTP 200 OK o 302 Found.
+
+##  Verificar conectividad externa (desde el host)
+a) Edita tu archivo hosts (en Windows: hosts):
+Agrega estas líneas:
+
+b) Abre tu navegador y accede a:
+http://www.sitio1.test (debería mostrar WordPress)
+http://www.sitio2.test (debería mostrar Joomla)
