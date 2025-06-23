@@ -111,3 +111,30 @@ docker compose exec proxy-nginx curl -I http://cms2-joomla
 b) Abre tu navegador y accede a:
 http://www.sitio1.test (debería mostrar WordPress)
 http://www.sitio2.test (debería mostrar Joomla)
+
+daniel@daniel-VirtualBox:~/containers$ docker compose down
+docker compose up -d
+WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Running 5/5
+ ✔ Container proxy-nginx       Removed                                                                                                5.2s 
+ ✔ Container cms1-wordpress    Removed                                                                                                6.2s 
+ ✔ Container cms2-joomla       Removed                                                                                                6.1s 
+ ✔ Container cms-db            Removed                                                                                                7.3s 
+ ✔ Network containers_cms-net  Removed                                                                                                1.5s 
+WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+[+] Running 5/5
+ ✔ Network containers_cms-net  Created                                                                                                1.7s 
+ ✔ Container cms-db            Started                                                                                                6.1s 
+ ✔ Container cms2-joomla       Started                                                                                                9.9s 
+ ✔ Container cms1-wordpress    Started                                                                                               10.2s 
+ ✔ Container proxy-nginx       Started                                                                                               15.8s 
+daniel@daniel-VirtualBox:~/containers$ docker compose exec proxy-nginx ping -c 2 cms1-wordpress
+docker compose exec proxy-nginx ping -c 2 cms2-joomla
+docker compose exec proxy-nginx ping -c 2 cms-db
+WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+service "proxy-nginx" is not running
+WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+service "proxy-nginx" is not running
+WARN[0000] /home/daniel/containers/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+service "proxy-nginx" is not running
+
