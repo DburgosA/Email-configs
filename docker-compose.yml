@@ -52,6 +52,20 @@ services:
     volumes:
       - cms2_data:/var/www/html
 
+  proxy:
+    image: nginx:1.27
+    container_name: proxy-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - cms1
+      - cms2
+    networks:
+      - cms-net
+
 networks:
   cms-net:
     driver: bridge

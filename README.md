@@ -5,7 +5,7 @@
 - **cms1**: WordPress (PHP, acceso a base de datos)
 - **db**: MySQL (usuario y base de datos independientes para cada CMS)
 - **cms2**: Joomla (PHP, acceso a base de datos)
-- **proxy**: (Por crear)
+- **proxy**: Nginx (proxy inverso con virtual hosts para www.sitio1.test y www.sitio2.test)
 
 ## Red Docker
 Se utiliza una red bridge personalizada llamada `cms-net` para la comunicación interna.
@@ -41,6 +41,25 @@ Se utiliza una red bridge personalizada llamada `cms-net` para la comunicación 
 - `JOOMLA_DB_PASSWORD=joomla_pass`
 - `JOOMLA_DB_NAME=joomla_db`
 
+## Contenedor Proxy: Nginx
+
+- Imagen: `nginx:1.27`
+- Configuración en `proxy/default.conf`:
+  - `www.sitio1.test` → WordPress
+  - `www.sitio2.test` → Joomla
+- Expone el puerto 80 del host
+
+### Ejemplo de hosts en el sistema operativo del host (Windows/Linux):
+
+Agrega estas líneas a tu archivo `hosts` para pruebas locales:
+
+```
+127.0.0.1 www.sitio1.test
+127.0.0.1 www.sitio2.test
+```
+
+Luego accede desde el navegador a http://www.sitio1.test y http://www.sitio2.test
+
 ## Cómo iniciar los contenedores
 
 ```sh
@@ -48,8 +67,8 @@ docker compose up -d
 ```
 
 ## Próximos pasos
-- Crear proxy inverso (Nginx/HAProxy)
-- Configurar virtual hosts y resolución de nombres
+- Configurar certificados SSL para HTTPS
+- Optimizar configuración de Nginx y PHP
 
 ---
 
