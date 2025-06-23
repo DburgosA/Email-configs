@@ -3,6 +3,17 @@
 
 set -e
 
+echo "== Instalando ping en todos los contenedores =="
+docker compose exec proxy-nginx apt-get update && docker compose exec proxy-nginx apt-get install -y iputils-ping
+
+docker compose exec cms1-wordpress apt-get update && docker compose exec cms1-wordpress apt-get install -y iputils-ping
+
+docker compose exec cms2-joomla apt-get update && docker compose exec cms2-joomla apt-get install -y iputils-ping
+
+docker compose exec cms-db apt-get update && docker compose exec cms-db apt-get install -y iputils-ping
+
+docker compose exec phpmyadmin apt-get update && docker compose exec phpmyadmin apt-get install -y iputils-ping
+
 echo "== Ping desde proxy a CMS1 (WordPress) =="
 docker compose exec proxy-nginx ping -c 2 cms1-wordpress
 
